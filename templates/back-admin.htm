@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ Admin - SILVIACILENE</title>
+    <!-- ✅ AQUÍ SE INYECTA EL CSS Y JS DESDE app.py -->
+    {{ estilos|safe }}
+    {{ js_theme|safe }}
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Panel de Administración</h1>
+            <p>Gestiona enlaces, fondeo, emergencia y configuración del bot</p>
+            <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </div>
+
+        <div class="nav-bar">
+            <a href="/" class="nav-btn nav-home">🏠 Inicio</a>
+            <a href="/admin" class="nav-btn nav-admin">⚙️ Admin</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category=='success' else 'error' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- 🔗 Sección Enlaces -->
+        <div class="card">
+            <h2>🔗 Agregar Enlace</h2>
+            <form method="POST">
+                <div class="form-group"><label>Nombre</label><input type="text" name="nombre" required></div>
+                <div class="form-group"><label>URL</label><input type="url" name="url" required></div>
+                <div class="form-group"><label>Categoría</label><input type="text" name="categoria" value="General"></div>
+                
+                <label>Icono:</label>
+                <input type="hidden" name="icono" id="iconoSeleccionado" value="🔗">
+                <div class="icon-selector">
+                    {% for icono in iconos %}
+                        <div class="icon-option" onclick="selectIcon('{{ icono }}', this)">
+                            {% if icono.endswith(('.png', '.jpg', '.jpeg', '.svg', '.ico')) %}
+                                <img src="{{ static_dir }}/iconos/{{ icono }}" alt="{{ icono }}">
+                            {% else %}
+                                <span>{{ icono }}</span>
+                            {% endif %}
+                            <label>{{ icono }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">💡 Click en un icono para seleccionarlo.</p>
+                
+                <button type="submit" class="btn btn-primary" style="margin-top:15px;">💾 Guardar Enlace</button>
+            </form>
+        </div>
+
+        <!-- 🗺️ Sección GPX -->
+        <div class="card">
+            <h2>📍 Importar Ruta GPX</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group"><label>Archivo GPX</label><input type="file" name="gpx" accept=".gpx" required></div>
+                <button type="submit" class="btn btn-primary">📤 Importar</button>
+            </form>
+            {% if fondeo.waypoints and fondeo.waypoints|length > 0 %}
+                <div style="margin-top:15px;">
+                    <h3>Waypoints Cargados ({{ fondeo.waypoints|length }})</h3>
+                    {% for wp in fondeo.waypoints %}
+                        <div class="waypoint-card">
+                            <div class="waypoint-name">📍 {{ wp.nombre }}</div>
+                            <div class="waypoint-coords">Lat: <span class="coord-highlight">{{ wp.latitud }}</span> | Lon: <span class="coord-highlight">{{ wp.longitud }}</span></div>
+                            {% if wp.rumbo %}<div>Rumbo: <span class="course-highlight">{{ wp.rumbo }}°</span></div>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- 🆘 Sección Emergencia -->
+        <div class="card">
+            <h2>🆘 Información de Emergencia</h2>
+            <form method="POST">
+                <div class="form-group"><label>Contacto</label><input type="text" name="contacto" value="{{ emergencia.contacto }}" required></div>
+                <div class="form-group"><label>Mensaje SOS</label><input type="text" name="mensaje" value="{{ emergencia.mensaje }}" required></div>
+                <button type="submit" class="btn btn-primary">💾 Actualizar</button>
+            </form>
+        </div>
+
+        <!-- 🤖 Sección Bot Telegram (Integrada) -->
+        <div class="card">
+            <h2>🤖 Configuración del Bot Telegram</h2>
+            <form method="POST">
+                <div class="config-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
+                    <div class="config-section" style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+                        <h3>📡 Signal K</h3>
+                        <label>URL</label><input type="text" name="sk_url" value="{{ bot_config.sk_url }}">
+                        <label>Token</label><input type="password" name="sk_token" value="{{ bot_config.sk_token }}">
+                        <label>Ruta (sk_path)</label><input type="text" name="sk_path" value="{{ bot_config.sk_path }}">
+                    </div>
+                    <div class="config-section" style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+                        <h3>📱 Telegram</h3>
+                        <label>Bot Token</label><input type="password" name="telegram_token" value="{{ bot_config.telegram_token }}">
+                        <label>Chat ID</label><input type="text" name="chat_id" value="{{ bot_config.chat_id }}">
+                        <label>Intervalo (min)</label><input type="number" name="report_interval_min" value="{{ bot_config.report_interval_min }}">
+                    </div>
+                    <div class="config-section" style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+                        <h3>🚨 Umbrales</h3>
+                        <label>Bat. Baja (V)</label><input type="number" step="0.1" name="bat_low" value="{{ bot_config.bat_low }}">
+                        <label>Bat. Crítica (V)</label><input type="number" step="0.1" name="bat_crit" value="{{ bot_config.bat_crit }}">
+                        <label>Tanque Bajo (%)</label><input type="number" step="0.5" name="tank_low" value="{{ bot_config.tank_low }}">
+                        <label>Tanque Crítico (%)</label><input type="number" step="0.5" name="tank_crit" value="{{ bot_config.tank_crit }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:15px;">💾 Guardar Config. Bot</button>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">💡 Usa <code>/reload</code> en Telegram tras guardar.</p>
+            </form>
+        </div>
+
+        <!-- 📋 Lista de Enlaces Existentes -->
+        <div class="card">
+            <h2>📋 Enlaces Existentes</h2>
+            <table>
+                <thead><tr><th>Icono</th><th>Nombre</th><th>Categoría</th><th>URL</th><th>Acción</th></tr></thead>
+                <tbody>
+                    {% for enlace in enlaces %}
+                    <tr>
+                        <td>
+                            {% if enlace.icono.endswith(('.png', '.jpg', '.jpeg', '.svg', '.ico')) %}
+                                <img src="{{ static_dir }}/iconos/{{ enlace.icono }}" style="width:24px;height:24px;">
+                            {% else %}
+                                {{ enlace.icono }}
+                            {% endif %}
+                        </td>
+                        <td>{{ enlace.nombre }}</td>
+                        <td>{{ enlace.categoria }}</td>
+                        <td><a href="{{ enlace.url }}" target="_blank" style="color:var(--text-secondary);">Ver</a></td>
+                        <td>
+                            <form method="POST" action="/eliminar" style="display:inline;">
+                                <input type="hidden" name="url" value="{{ enlace.url }}">
+                                <button type="submit" class="btn btn-danger" style="padding:5px 10px; font-size:12px;">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">⛵ SILVIACILENE © 2026 | Oslofjord | Capitán: Nito</div>
+    </div>
+</body>
+</html>

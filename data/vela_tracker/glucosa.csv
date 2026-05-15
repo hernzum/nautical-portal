@@ -1,0 +1,15 @@
+fecha,hora,tipo,valor_mg_dl,antes_comida,despues_comida,notas
+2026-03-04,10:38,Ayunas,7.2,,,
+2026-03-05,10:03,Ayunas,131,mmol,,,
+2026-03-06,10:26,Pre-prandial,121,mmol,,,
+2026-03-06,13:16,Post-prandial,128,mmol,,,
+2026-03-07,09:12,Ayunas,115,mmol,,,
+2026-03-08,06:04,Ayunas,158,mmol,,,
+2026-03-09,07:46,Ayunas,149,mmol,,,8.3 ayunas
+2026-03-09,15:25,Post-prandial,182,mmol,,,
+2026-03-10,08:32,Ayunas,10.1,,,
+2026-03-11,07:43,Ayunas,8.0,,,después del café
+2026-03-12,06:58,Ayunas,8.1,,,"Sin café , brustablett"
+2026-03-16,13:05,Post-prandial,9.2,,,
+2026-03-18,17:00,Ayunas,5.9,,,
+2026-03-20,09:09,Ayunas,5.9,,,Solo café 

@@ -1,0 +1,16 @@
+# Archivos sensibles - NO SUBIR
+config.json
+venv/
+__pycache__/
+*.pyc
+data/*.json
+.env
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

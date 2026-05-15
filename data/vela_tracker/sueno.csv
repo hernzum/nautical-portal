@@ -1,0 +1,9 @@
+fecha,tipo,horas_inicio,horas_fin,duracion_h,calidad_1_10,despertares,notas
+2026-03-04,Principal_diurno,22:00,0600,,10,1,
+2026-03-05,Principal_diurno,22:00,0630,,9,1,
+2026-03-06,Principal_diurno,2230,0545,,5,4,como chocolate antes de dormir
+2026-03-07,Principal_diurno,2230,0530,,6,3,
+2026-03-09,Principal_diurno,2230,0530,,10,2,
+2026-03-09,Siesta,15,15:20,,10,,
+2026-03-12,Principal_diurno,2300,0600,,9,,
+2026-03-20,Principal_diurno,2100,0530,,10,,

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal SILVIACILENE</title>
+    {{ estilos|safe }}
+    {{ js_theme|safe }}
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🧠⛵ Portal Náutico SILVIACILENE</h1>
+            <p>Tu centro de comando náutico</p>
+            <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+        </header>
+        
+        <nav class="nav-bar">
+            <a href="/" class="nav-btn nav-home">🏠 Inicio</a>
+            <a href="/admin" class="nav-btn nav-admin">⚙️ Admin</a>
+        </nav>
+        
+        <div class="card">
+            <h2>🔗 Enlaces Rápidos</h2>
+            <div class="links-grid">
+                {% for enlace in enlaces %}
+                <a href="{{ enlace.url }}" class="link-card" target="_blank">
+                    <div class="link-icon">
+                        {% if enlace.icono.endswith(('.png', '.jpg', '.jpeg', '.svg', '.ico')) %}
+                        <img src="{{ static_dir }}/iconos/{{ enlace.icono }}" alt="{{ enlace.nombre }}">
+                        {% else %}
+                        {{ enlace.icono }}
+                        {% endif %}
+                    </div>
+                    <div class="link-name">{{ enlace.nombre }}</div>
+                    <div class="link-category">{{ enlace.categoria }}</div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🆘 Emergencia</h2>
+            <div class="emergency-box">
+                <p><strong>📞 Contacto:</strong> <span class="emergency-contact">{{ emergencia.contacto }}</span></p>
+                <p><strong>📝 Mensaje:</strong> {{ emergencia.mensaje }}</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>⚓ Waypoints y Rutas</h2>
+            {% if fondeo.waypoints and fondeo.waypoints|length > 0 %}
+            <p><strong>Waypoints:</strong> {{ fondeo.waypoints|length }} | <strong>Rutas:</strong> {{ fondeo.courses|length }}</p>
+            {% for wp in fondeo.waypoints %}
+            <div class="waypoint-card">
+                <div class="waypoint-name">📍 {{ wp.nombre }}</div>
+                <div class="waypoint-coords">
+                    <span class="coord-highlight">Lat: {{ wp.latitud|round(6) }} | Lon: {{ wp.longitud|round(6) }}</span>
+                </div>
+                {% if wp.rumbo %}
+                <div class="waypoint-coords">
+                    <span class="course-highlight">🧭 Rumbo: {{ wp.rumbo }}°</span>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="text-align:center;color:var(--text-muted);">Sin waypoints cargados. Importa un GPX desde Admin.</p>
+            {% endif %}
+        </div>
+        
+        <footer class="footer">
+            <p>⛵ SILVIACILENE © 2026 | Oslofjord | Capitán: Nito</p>
+        </footer>
+    </div>
+</body>
+</html>

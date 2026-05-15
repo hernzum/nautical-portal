@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>📊 Tracker Web Integrado</h2>
+    <p style="text-align:center;color:var(--text-muted);margin-bottom:20px;">
+        El tracker web ahora está integrado en el portal.
+    </p>
+    
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-number">🩸</div>
+            <div class="stat-label">Glucosa (mmol/L)</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">⛵</div>
+            <div class="stat-label">Práctica Vela</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">📚</div>
+            <div class="stat-label">Lectura</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">💧</div>
+            <div class="stat-label">Agua</div>
+        </div>
+    </div>
+    
+    <div style="text-align:center;margin-top:30px;">
+        <p style="color:var(--text-muted);margin-bottom:20px;">
+            Para acceder al tracker web completo con todas las funciones:
+        </p>
+        <a href="http://10.0.0.60:5001" class="btn btn-success" target="_blank">
+            📊 Abrir Tracker Web Completo
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>📈 Registro Rápido</h2>
+    <p style="text-align:center;color:var(--text-muted);">
+        Usa el tracker web principal para registrar glucosa, práctica, lectura, sueño, nutrición y agua.
+    </p>
+</div>
+{% endblock %}
