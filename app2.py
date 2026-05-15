@@ -11,10 +11,15 @@ import json
 import gpxpy
 import gpxpy.gpx
 from math import atan2, radians, degrees, sin, cos
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env si existe
+load_dotenv()
 
 app = Flask(__name__)
 app.config['STATIC_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
-app.secret_key = 'silviacilene_secret_key_2026_nito_secure'
+# Secret key desde variable de entorno o valor por defecto (debe cambiarse en producción)
+app.secret_key = os.getenv('SECRET_KEY', 'silviacilene_secret_key_2026_nito_secure')
 auth = HTTPBasicAuth()
 
 # Configuración
@@ -28,9 +33,9 @@ ARCHIVO_ENLACES = os.path.join(DATA_DIR, 'enlaces.json')
 ARCHIVO_EMERGENCIA = os.path.join(DATA_DIR, 'emergencia.json')
 ARCHIVO_FONDEO = os.path.join(DATA_DIR, 'fondeo.json')
 
-# Usuario y contraseña (CAMBIAR EN PRODUCCIÓN)
-USUARIO = 'nito'
-CONTRASENA_HASH = generate_password_hash('nito2002')
+# Usuario y contraseña desde variables de entorno (CAMBIAR EN PRODUCCIÓN)
+USUARIO = os.getenv('USUARIO', 'nito')
+CONTRASENA_HASH = generate_password_hash(os.getenv('CONTRASENA', 'nito2002'))
 
 @auth.verify_password
 def verificar_contrasena(usuario, contrasena):
