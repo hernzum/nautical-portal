@@ -137,12 +137,11 @@ El archivo `config.json` contiene la configuración del bot:
 
 ---
 
-## 🔐 Credenciales por Defecto
+## 🔐 Autenticación
 
-- **Usuario:** `nito`
-- **Contraseña:** `nito2002`
+La aplicación utiliza autenticación HTTP Basic.
 
-**⚠️ Seguridad:** Cambia estas credenciales en producción.
+**⚠️ Seguridad:** Configura tus propias credenciales seguras en el código antes de usar en producción. Las credenciales por defecto deben ser cambiadas inmediatamente.
 
 ---
 
